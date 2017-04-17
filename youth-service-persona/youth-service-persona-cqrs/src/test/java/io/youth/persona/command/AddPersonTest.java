@@ -63,7 +63,7 @@ public class AddPersonTest {
   }
 
   @Test
-  public void addPersonWithSecondayFields() {
+  public void addPersonWithSecondaryFields() {
     final AddPerson addPerson = new AddPerson(context);
     person.put("secondName", "Marco");
     person.put("secondFamilyName", "Ruggera");
@@ -71,5 +71,14 @@ public class AddPersonTest {
     final PersonRecord record = addPerson.apply(person);
 
     Assert.assertNotNull(record);
+  }
+
+  @Test
+  public void addPersonThenValidUUID() {
+    final AddPerson addPerson = new AddPerson(context);
+    final PersonRecord record = addPerson.apply(person);
+
+    Assert.assertNotNull(record.uuid());
+    Assert.assertEquals(36, record.uuid().length());
   }
 }

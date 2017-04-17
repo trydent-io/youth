@@ -1,6 +1,6 @@
 create table `persona`.`person` (
-  `id`                 int         not null auto_increment,
-  `uuid`               binary(16)  not null,
+  `id`                 int(12) not null auto_increment,
+  `uuid`               char(36) not null,
   `first_name`         varchar(45) not null,
   `second_name`        varchar(45) null,
   `first_family_name`  varchar(65) not null,

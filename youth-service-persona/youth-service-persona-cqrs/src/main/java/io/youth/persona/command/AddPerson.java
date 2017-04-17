@@ -27,6 +27,7 @@ public final class AddPerson implements Function<Map<String, Object>, PersonReco
     person.birthDate(Date.valueOf(LocalDate.parse(params.get("birthDate").toString())));
     person.fiscalCode(params.get("fiscalCode").toString());
     person.store();
+    person.refresh();
 
     return person;
   }
