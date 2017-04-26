@@ -13,8 +13,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>youth-service-persona-sql</module>
-    <module>youth-service-persona-restapi</module>
-    <module>youth-service-persona-cqrs</module>
+    <module>youth-service-persona-api</module>
+    <module>youth-service-persona-cqs</module>
   </modules>
 
   <dependencies>
