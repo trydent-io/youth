@@ -3,26 +3,21 @@ package io.youth.service
 import com.github.davidmoten.rx.jdbc.Database
 import com.github.davidmoten.rx.jdbc.QuerySelect
 import com.github.davidmoten.rx.jdbc.QueryUpdate
-import rx.Observable
-import rx.observables.BlockingObservable
-import java.util.Optional
-import java.util.Optional.of
-import java.util.Optional.ofNullable
 
 class Uuid {
   fun asString(): String = java.util.UUID.randomUUID().toString()
 }
 
 private val create = """
-create table if not exists person (
-  id int(11) not null auto_increment,
-  uuid varchar(36) not null,
-  firstName varchar(127) not null,
-  secondName varchar(127),
-  lastName varchar(255) not null,
-  liked int(1) not null default 0,
-  primary key(id)
-)
+  create table if not exists person (
+    id int(11) not null auto_increment,
+    uuid varchar(36) not null,
+    firstName varchar(127) not null,
+    secondName varchar(127),
+    lastName varchar(255) not null,
+    liked int(1) not null default 0,
+    primary key(id)
+  )
 """
 private val projection = "uuid, firstName, secondName, lastName, liked"
 private val all = "select $projection from person p"
@@ -32,16 +27,16 @@ private val edit = "update person set firstName = :firstName, secondName = :seco
 private val editLiked = "update person set liked = :liked where uuid = :uuid"
 private val remove = "delete from person where uuid = :uuid"
 
-private fun QuerySelect.Builder.byUuid(value: String): QuerySelect.Builder = this.parameter("uuid", value)
-private fun QuerySelect.Builder.asPerson(): Observable<Person> = this.autoMap(Person::class.java)
+private fun QuerySelect.Builder.byUuid(value: String) = this.parameter("uuid", value)
+private fun QuerySelect.Builder.asPerson() = this.autoMap(Person::class.java)
 
-private fun QueryUpdate.Builder.uuid(value: String): QueryUpdate.Builder = this.parameter("uuid", value)
-private fun QueryUpdate.Builder.firstName(value: String): QueryUpdate.Builder = this.parameter("firstName", value)
-private fun QueryUpdate.Builder.secondName(value: String?): QueryUpdate.Builder = this.parameter("secondName", value)
-private fun QueryUpdate.Builder.lastName(value: String): QueryUpdate.Builder = this.parameter("lastName", value)
-private fun QueryUpdate.Builder.liked(value: Int): QueryUpdate.Builder = this.parameter("liked", value)
+private fun QueryUpdate.Builder.uuid(value: String) = this.parameter("uuid", value)
+private fun QueryUpdate.Builder.firstName(value: String) = this.parameter("firstName", value)
+private fun QueryUpdate.Builder.secondName(value: String?) = this.parameter("secondName", value)
+private fun QueryUpdate.Builder.lastName(value: String) = this.parameter("lastName", value)
+private fun QueryUpdate.Builder.liked(value: Int) = this.parameter("liked", value)
 
-private fun BlockingObservable<Person>.optionalFirst(): Optional<Person> = ofNullable(this.first())
+fun Database.persons() = Persons(this)
 
 data class Person(
   val uuid: String,
@@ -67,26 +62,25 @@ class Persons(val db: Database) {
     .toIterable()
     .first()
 
-  fun one(uuid: String): Optional<Person> = db
+  fun one(uuid: String): Person? = db
     .select(one)
     .byUuid(uuid)
     .asPerson()
     .toBlocking()
-    .optionalFirst()
+    .single()
 
-  fun add(firstName: String, secondName: String? = null, lastName: String): Optional<Person> = of(Uuid().asString())
-    .flatMap {
-      db
-        .select(one)
-        .byUuid(it)
-        .dependsOn(
-          db.update(add)
-            .uuid(it).firstName(firstName).secondName(secondName).lastName(lastName).liked(0)
-            .count())
-        .asPerson()
-        .toBlocking()
-        .optionalFirst()
-    }
+  fun add(firstName: String, secondName: String? = null, lastName: String): Person? = Uuid().asString().let {
+    db
+      .select(one)
+      .byUuid(it)
+      .dependsOn(
+        db.update(add)
+          .uuid(it).firstName(firstName).secondName(secondName).lastName(lastName).liked(0)
+          .count())
+      .asPerson()
+      .toBlocking()
+      .single()
+  }
 
   fun editLiked(uuid: String, liked: Int): Int = db
     .update(editLiked)
@@ -95,7 +89,7 @@ class Persons(val db: Database) {
     .toBlocking()
     .single()
 
-  fun edit(uuid: String, firstName: String, secondName: String? = null, lastName: String): Optional<Person> = db
+  fun edit(uuid: String, firstName: String, secondName: String? = null, lastName: String): Person? = db
     .select(one)
     .byUuid(uuid)
     .dependsOn(
@@ -104,12 +98,12 @@ class Persons(val db: Database) {
         .count())
     .asPerson()
     .toBlocking()
-    .optionalFirst()
+    .single()
 
   fun remove(uuid: String): Int = db
     .update(remove)
     .uuid(uuid)
     .count()
     .toBlocking()
-    .firstOrDefault(-1)
+    .singleOrDefault(0)
 }
