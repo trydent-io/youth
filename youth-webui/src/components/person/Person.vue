@@ -94,7 +94,7 @@
           .catch(() => self.$bus.$emit('toastWarning', `Person ${person.uuid} not editable`))
       },
       save () {
-        const save = this.person['uuid'] === undefined ? 'post' : 'put'
+        const save = (this.person['uuid'] === undefined || this.person['uuid'] == null) ? 'post' : 'put'
         const partial = this.person.secondName == null || this.person.secondName === '' ? 'partial' : 'complete'
         const post = this.$http[save](`http://localhost:8080/person/${partial}`, this.person)
 
@@ -102,7 +102,7 @@
           .then(response => this.$bus.$emit('personStored', response.data))
           .then(() => this.close())
           .then(() => this.$bus.$emit('toastSuccess', 'Person has been stored'))
-          .catch(() => this.$bus.$emit('toastError', 'Error during person storing'))
+          .catch(() => this.$bus.$emit('toastthis.person[\'uuid\']Error', 'Error during person storing'))
       }
     }
   }

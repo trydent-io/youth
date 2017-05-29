@@ -154,7 +154,7 @@
         const liked = person.liked === 0 ? 1 : 0
         const dont = liked === 1 ? '' : ' don\'t '
         const self = this
-        this.$http.put('/person/liked', {
+        this.$http.put('http://localhost:8080/person/liked', {
           uuid: person.uuid,
           liked: liked
         })
