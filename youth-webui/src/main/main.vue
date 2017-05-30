@@ -27,9 +27,9 @@
 
 <script>
   import VueScrollbar from 'vue2-scrollbar'
-  import TopMenu from './TopMenu.vue'
-  import SideMenu from './SideMenu.vue'
-  import ToastMessage from './ToastMessage.vue'
+  import TopMenu from './top-menu.vue'
+  import SideMenu from './side-menu.vue'
+  import ToastMessage from './toast-message.vue'
   //  import {mapState} from 'vuex'
 
   export default {

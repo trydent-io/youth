@@ -8,7 +8,7 @@
 
       <img src="../assets/youth.svg" width="64" height="32">
 
-      <SearchField></SearchField>
+      <search-field></search-field>
 
       <md-menu md-direction="bottom left">
         <md-button class="md-icon-button" md-menu-trigger>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import SearchField from './SearchField.vue'
+  import SearchField from './search-field.vue'
 
   export default {
     components: {SearchField},

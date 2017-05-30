@@ -20,7 +20,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <jooby.version>1.1.1</jooby.version>
+    <jooby.version>1.1.2</jooby.version>
     <flyway.version>4.0.3</flyway.version>
     <jooq.version>3.9.0</jooq.version>
   </properties>

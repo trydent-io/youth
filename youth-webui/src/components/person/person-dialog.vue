@@ -22,6 +22,20 @@
           <label>Last Name</label>
           <md-input required v-model="persona.lastName"></md-input>
         </md-input-container>
+        <label>Gender</label>
+        <md-button-toggle md-single class="md-primary">
+          <md-button :class="{'md-icon-button':true, 'md-toggle': isMale }" @click.native="persona.gender = 'male'" style="border-radius: 50%">
+            <md-icon>directions_run</md-icon>
+          </md-button>
+
+          <md-button :class="{'md-icon-button':true, 'md-toggle': isFemale }" @click.native="persona.gender = 'female'" style="border-radius: 50%">
+            <md-icon>pregnant_woman</md-icon>
+          </md-button>
+
+          <md-button :class="{'md-icon-button':true, 'md-toggle': isBeyond }" @click.native="persona.gender = 'beyond'" style="border-radius: 50%">
+            <md-icon>star</md-icon>
+          </md-button>
+        </md-button-toggle>
       </form>
     </md-dialog-content>
 
@@ -39,7 +53,8 @@
   const DefaultPerson = () => ({
     firstName: null,
     secondName: null,
-    lastName: null
+    lastName: null,
+    gender: 'male'
   })
 
   export default {
@@ -47,6 +62,8 @@
       const self = this
       this.$bus.$on('openPerson', person => {
         self.person = person
+        console.log('openPerson, self: ' + self)
+        console.log('openPerson, pers: ' + person)
         if (person != null && person !== undefined) {
           self.fetchOne(person)
         } else {
@@ -67,6 +84,9 @@
           this.persona = value || new DefaultPerson()
         }
       },
+      isMale () { return this.persona.gender === 'male' },
+      isFemale () { return this.persona.gender === 'female' },
+      isBeyond () { return this.persona.gender === 'star' },
       firstNameField () {
         return this.$refs.firstNameField
       },
@@ -85,7 +105,7 @@
       },
       fetchOne (person) {
         const self = this
-        this.$http.get(`http://localhost:8080/person/one/${person.uuid}`)
+        this.$http.get(`http://localhost:8080/person/${person.uuid}`)
           .then(response => {
             console.log(`Ci sono: ${response.data}`)
             self.person = response.data
@@ -94,11 +114,10 @@
           .catch(() => self.$bus.$emit('toastWarning', `Person ${person.uuid} not editable`))
       },
       save () {
-        const save = (this.person['uuid'] === undefined || this.person['uuid'] == null) ? 'post' : 'put'
-        const partial = this.person.secondName == null || this.person.secondName === '' ? 'partial' : 'complete'
-        const post = this.$http[save](`http://localhost:8080/person/${partial}`, this.person)
+        const method = (this.person['uuid'] === undefined || this.person['uuid'] == null) ? 'post' : 'put'
+        const save = this.$http[method](`http://localhost:8080/person`, this.person)
 
-        post
+        save
           .then(response => this.$bus.$emit('personStored', response.data))
           .then(() => this.close())
           .then(() => this.$bus.$emit('toastSuccess', 'Person has been stored'))

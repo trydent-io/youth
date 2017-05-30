@@ -24,43 +24,96 @@
           <md-dialog-confirm
             ref="removeDialog"
             :md-title="'Be careful'"
-            :md-content-html="'Do you really want to remove it?'"
+            :md-content-html="'Do you really want to removing it?'"
             :md-ok-text="'Yes'"
             :md-cancel-text="'No'"
             @close="onClosedRemove">
           </md-dialog-confirm>
 
-          <Person></Person>
+          <person-dialog></person-dialog>
 
           <md-button class="md-fab md-fab-bottom-right" id="fab" @click.native="openPerson">
-            <md-icon>add</md-icon>
+            <md-icon>adding</md-icon>
           </md-button>
 
-          <isotope :list="persons" class="grid" :options="option" ref="cpt">
-            <md-card v-for="(p, index) in persons" :key="p.uuid" md-with-hover>
-              <md-card-media-cover md-text-scrim>
-                <md-card-media md-ratio="16:9">
-                  <img src="/static/someone.jpg" alt="io">
-                </md-card-media>
-                <md-card-area>
-                  <md-card-header>
-                    <div class="md-title">{{ fullName(p) }}</div>
-                  </md-card-header>
-                  <md-card-actions>
-                    <md-button :class="{ 'md-icon-button': true, 'md-accent': p.liked === 1}" @click.native="liked(index)">
-                      <md-icon>favorite</md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button md-primary" @click.native="openPerson(index)">
+          <!--          <md-layout md-gutter style="margin: 8px 0 8px 0">
+                      <md-layout md-flex="10" style="justify-content: center; align-items: center">
+                        <span class="md-body1">Picture</span>
+                      </md-layout>
+                      <md-layout md-flex="20" style="justify-content: flex-start; align-items: center">
+                        <span class="md-body1">Name</span>
+                      </md-layout>
+                      <md-layout style="justify-content: center; align-items: center">
+                        <span class="md-body1">Tags</span>
+                      </md-layout>
+                      <md-layout style="justify-content: center; align-items: center">
+                        <span class="md-body1">Actions</span>
+                      </md-layout>
+                    </md-layout>
+                    <isotope :list="persons" class="grid" :options="option" ref="cpt">
+
+                    </isotope>-->
+          <md-table-card>
+            <md-table md-sort="dessert" md-sort-type="desc">
+              <md-table-header>
+                <md-table-row>
+                  <md-table-head style="text-align: center; width: 10%;">
+                    <md-icon>account_circle</md-icon>
+                  </md-table-head>
+                  <md-table-head md-sort-by="name" style="width: 20%;">Name</md-table-head>
+                  <md-table-head md-sort-by="gender" style="text-align: left;">Gender</md-table-head>
+                  <md-table-head style="text-align: center; width: 10%;">
+                    <md-icon>settings</md-icon>
+                  </md-table-head>
+                </md-table-row>
+              </md-table-header>
+
+              <md-table-body>
+                <md-table-row v-for="(p, row) in persons" :key="row" :md-item="p">
+                  <md-table-cell>
+                    <md-avatar class="md-large">
+                      <img :src="p.picture" alt="picture">
+                    </md-avatar>
+                  </md-table-cell>
+
+                  <md-table-cell>
+                    <table>
+                      <tr>
+                        <td>
+                          <span class="md-title" style="color: #7f8c8d">{{ p.fullName }}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="md-subheading" style="color: #95a5a6">{{ p.email }}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </md-table-cell>
+
+                  <md-table-cell>
+                    <md-chip style="background: rgb(26, 188, 156); color: rgb(236, 240, 241)">
+                      {{p.gender}}
+                    </md-chip>
+                  </md-table-cell>
+
+                  <md-table-cell>
+                    <md-button class="md-icon-button" style="align-content: center; justify-content: center;">
                       <md-icon>edit</md-icon>
                     </md-button>
-                    <md-button class="md-icon-button md-warn" @click.native="remove(index)">
-                      <md-icon>delete</md-icon>
-                    </md-button>
-                  </md-card-actions>
-                </md-card-area>
-              </md-card-media-cover>
-            </md-card>
-          </isotope>
+                  </md-table-cell>
+                </md-table-row>
+              </md-table-body>
+            </md-table>
+            <md-table-pagination
+              md-size="5"
+              md-total="10"
+              md-page="1"
+              md-label="Rows"
+              md-separator="of"
+              :md-page-options="[5, 10, 25, 50]">
+            </md-table-pagination>
+          </md-table-card>
         </div>
       </md-layout>
     </md-layout>
@@ -69,7 +122,7 @@
 
 <script>
   import Vueisotope from 'vueisotope'
-  import Person from './Person.vue'
+  import PersonDialog from './person-dialog.vue'
   import Rx from 'rxjs'
   //  import User from './User'
 
@@ -82,7 +135,7 @@
   export default {
     components: {
       'isotope': Vueisotope,
-      Person
+      PersonDialog
     },
     created () {
       this.fetchAll()
@@ -93,7 +146,7 @@
 
       this.$bus.$on('personStored', person => {
         self.persons.push(person)
-        self.$refs.cpt.arrange({ sortBy: 'uuid' })
+        self.$refs.cpt.arrange({sortBy: 'uuid'})
       })
     },
     computed: {
@@ -106,7 +159,9 @@
       hasBeenError () {
         return this.state === State.Error
       },
-      removeDialog () { return this.$refs.removeDialog }
+      removeDialog () {
+        return this.$refs.removeDialog
+      }
     },
     data: () => ({
       state: State.Loading,
@@ -116,6 +171,7 @@
       response: 'hi there',
       option: {
         itemSelector: '.grid-item',
+        layoutMode: 'vertical',
         masonry: {
           gutter: 10,
           columnWidth: 264,
@@ -134,7 +190,7 @@
       fetchAll () {
         this.state = State.Loading
         const self = this
-        this.$http.get('http://localhost:8080/person/all')
+        this.$http.get('http://localhost:8080/person/fetch/all')
           .then(response => {
             response.data.forEach(it => self.persons.push(it))
             self.state = State.Loaded
@@ -158,11 +214,13 @@
           uuid: person.uuid,
           liked: liked
         })
-          .then(response => { self.persons[index].liked = liked })
+          .then(response => {
+            self.persons[index].liked = liked
+          })
           .then(() => self.$bus.$emit('toastSuccess', `You ${dont} like ${person.firstName} ${person.lastName}.`))
           .catch(() => self.$bus.$emit('toastWarning', 'Person has not been liked!'))
       },
-      remove (index) {
+      removing (index) {
         this.removeable = this.persons[index]
         this.idx = index
         this.removeDialog.open()
@@ -218,5 +276,18 @@
     position: absolute;
     right: 32px;
     bottom: 32px;
+  }
+
+  .md-card .md-card-header:last-child {
+    margin-bottom: 0;
+  }
+
+  .flex-center-right {
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .md-table .md-table-cell .md-button .md-icon {
+    margin: auto auto;
   }
 </style>

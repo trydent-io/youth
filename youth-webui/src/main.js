@@ -8,7 +8,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueMaterial from 'vue-material'
 
-import App from './main/App.vue'
+import App from './main/main.vue'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
