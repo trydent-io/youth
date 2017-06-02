@@ -85,12 +85,10 @@
     },
     data: () => ({
       person: new Person(),
+      saving: false,
       message: null
     }),
     computed: {
-      saving () {
-        return false
-      },
       personDialog () { return $('#personDialog') },
       firstName () { return this.$refs.firstName }
     },
@@ -113,9 +111,10 @@
           this.saving = false
         }
 
-        const exceptionally = () => {
+        const exceptionally = err => {
           this.message = 'Something wrong has happened'
           this.saving = false
+          console.log(err)
         }
 
         if (this.person.uuid !== null) {

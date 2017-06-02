@@ -21,13 +21,13 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
+    // fallback: [path.join(__dirname, '../node_modules')],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'masonry': 'masonry-layout',
       'isotope': 'isotope-layout',
-      'semantic-ui': path.resolve(__dirname, '../node_modules/semantic-ui-css/semantic.min.js'),
-      'semantic-ui-css': path.resolve(__dirname, '../node_modules/semantic-ui-css/semantic.min.css')
+      'semantic-ui-css': path.resolve(__dirname, '../node_modules/semantic-ui-css/')
     }
   },
   plugins: [
@@ -35,7 +35,8 @@ module.exports = {
       // jquery
       $: 'jquery',
       jQuery: 'jquery',
-      'window.jQuery': 'jquery'
+      'window.jQuery': 'jquery',
+      'semantic-ui-css': 'semantic-ui-css'
     })
   ],
   module: {

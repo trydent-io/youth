@@ -80,8 +80,24 @@
       },
       add () {
         const item = this.selectedAdd
-        if (item === null || item === undefined) $('#combo').dropdown('show')
-        if (item.indexOf('person') > 0) this.$bus.$emit(prCommands.ADD_PERSON)
+        const combo = $('#combo')
+        const match = [
+          {
+            when: v => v === null || v === undefined,
+            then: v => combo.dropdown('show')
+          },
+          {
+            when: v => v.indexOf('person') > 0,
+            then: v => this.$bus.$emit(prCommands.ADD_PERSON)
+          }
+        ]
+
+        for (let i = 0; i < match.length; i++) {
+          if (match[i].when(item)) {
+            match[i].then(item)
+            break
+          }
+        }
       }
     }
   }
