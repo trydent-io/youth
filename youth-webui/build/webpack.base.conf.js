@@ -1,6 +1,7 @@
 var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
+var webpack = require('webpack')
 var vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
@@ -25,8 +26,18 @@ module.exports = {
       '@': resolve('src'),
       'masonry': 'masonry-layout',
       'isotope': 'isotope-layout',
+      'semantic-ui': path.resolve(__dirname, '../node_modules/semantic-ui-css/semantic.min.js'),
+      'semantic-ui-css': path.resolve(__dirname, '../node_modules/semantic-ui-css/semantic.min.css')
     }
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      // jquery
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
+    })
+  ],
   module: {
     rules: [
       {

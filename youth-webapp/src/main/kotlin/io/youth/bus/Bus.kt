@@ -3,17 +3,17 @@ package io.youth.bus
 import rx.Observable
 import rx.subjects.PublishSubject
 import rx.subjects.PublishSubject.create
-import java.util.UUID
+import java.lang.System.currentTimeMillis
 
-sealed class Bullet(private val id: UUID)
+sealed class Bullet(private val serialID: Long)
 
 interface Bus<B: Bullet> {
   fun emit(command: B)
   fun observed(): Observable<B>
 }
 
-open class Command: Bullet(UUID.randomUUID())
-open class Event: Bullet(UUID.randomUUID())
+open class Command: Bullet(currentTimeMillis())
+open class Event: Bullet(currentTimeMillis())
 
 data class SendSomething(val field: String): Command()
 

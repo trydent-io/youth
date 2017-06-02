@@ -6,7 +6,7 @@
         <md-icon>menu</md-icon>
       </md-button>
 
-      <img src="../assets/youth.svg" width="64" height="32">
+      <img src="../../static/youth.svg" width="64" height="32">
 
       <search-field></search-field>
 

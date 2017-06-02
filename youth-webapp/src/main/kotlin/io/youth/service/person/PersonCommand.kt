@@ -25,16 +25,17 @@ data class EditPerson(
 
 data class RemovePerson(val uuid: String) : Command()
 
-internal val adding = "insert into person($fields) values(?, ?, ?, ?, ?)"
-internal val editing = "update person set firstName = ?, secondName = ?, lastName = ?, gender = ? where uuid = ?"
+internal val adding = "insert into person($personFields) values($personParams)"
+internal val editing = "update person set firstName = ?, secondName = ?, lastName = ?, fiscalCode = ?, gender = ? where uuid = ?"
 internal val removing = "delete from person where uuid = ?"
 
 class PersonCommand @Inject constructor(private val db: Database) : Function<Command, Person?> {
   private val add: (a: AddPerson) -> Person? = {
-    it.let { (firstName, secondName, lastName, gender) ->
+    it.let { (firstName, secondName, lastName, fiscalCode, gender) ->
+      Thread.sleep(1000)
       newUuid().let { uuid ->
         db
-          .select(queryOne)
+          .select(personOne)
           .parameter(uuid)
           .dependsOn(
             db.update(adding)
@@ -42,6 +43,7 @@ class PersonCommand @Inject constructor(private val db: Database) : Function<Com
               .parameter(firstName)
               .parameter(secondName)
               .parameter(lastName)
+              .parameter(fiscalCode)
               .parameter(gender)
               .count())
           .asPerson()
@@ -52,15 +54,16 @@ class PersonCommand @Inject constructor(private val db: Database) : Function<Com
   }
 
   private val edit: (e: EditPerson) -> Person? = {
-    it.let { (uuid, firstName, secondName, lastName, gender) ->
+    it.let { (uuid, firstName, secondName, lastName, fiscalCode, gender) ->
       db
-        .select(queryOne)
+        .select(personOne)
         .parameter(uuid)
         .dependsOn(
           db.update(editing)
             .parameter(firstName)
             .parameter(secondName)
             .parameter(lastName)
+            .parameter(fiscalCode)
             .parameter(gender)
             .parameter(uuid)
             .count())
@@ -79,7 +82,7 @@ class PersonCommand @Inject constructor(private val db: Database) : Function<Com
         .toBlocking()
         .single()*/
       db
-        .select(queryOne)
+        .select(personOne)
         .parameter(uuid)
         .asPerson()
         .toBlocking()

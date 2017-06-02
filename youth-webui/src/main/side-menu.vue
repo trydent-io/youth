@@ -32,6 +32,7 @@
         <span>Alerts</span>
       </md-list-item>
     </md-list>
+    <!--
     <md-toolbar class="md-account-header">
       <md-list class="md-transparent">
         <md-list-item class="md-avatar-list">
@@ -62,6 +63,7 @@
         </md-list-item>
       </md-list>
     </md-toolbar>
+    -->
   </md-sidenav>
 </template>
 
@@ -89,4 +91,7 @@
     justify-content: flex-start;
     /*color: rgba(0, 0, 0, .87)*/
   }
+
+  .back00 > .md-sidenav-content { background: url(/static/back00.png) top left no-repeat; }
+  .back01 > .md-sidenav-content { background: url(/static/back01.png) top left no-repeat; }
 </style>

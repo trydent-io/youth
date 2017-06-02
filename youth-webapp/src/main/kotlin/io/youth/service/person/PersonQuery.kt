@@ -3,30 +3,18 @@ package io.youth.service.person
 import com.github.davidmoten.rx.jdbc.Database
 import com.google.inject.Inject
 
-data class ContactPerson(
-  val uuid: String,
-  val fullName: String,
-  val picture: String,
-  val email: String,
-  val gender: Gender
-)
-
-internal val queryAll = "select $fields from person"
-internal val queryOne = "$queryAll where uuid = ?"
+internal val profilePersonAll = "select * from profile_person"
+internal val personAll = "select $personFields from person"
+internal val personOne = "$personAll where uuid = ?"
 
 class PersonQuery @Inject constructor(private val db: Database) {
-  fun all(): Iterable<ContactPerson> = db
-    .select(queryAll)
-    .asPerson()
+  fun all(): Iterable<ProfilePerson> = db
+    .select(profilePersonAll)
+    .asProfilePerson()
     .asObservable()
     .map {
-      ContactPerson(
-        uuid = it.uuid,
-        fullName = it.firstName + ' ' + (it.secondName ?: "") + ' ' + it.lastName,
-        picture = "/static/someone.jpg",
-        email = "luke.skywalker@rebels.com",
-        gender = it.gender
-      )
+      Thread.sleep(100)
+      it
     }
     .toList()
     .toBlocking()
@@ -34,9 +22,11 @@ class PersonQuery @Inject constructor(private val db: Database) {
     .first()
 
   fun one(uuid: String): Person? = db
-    .select(queryOne)
+    .select(personOne)
     .parameter(uuid)
     .asPerson()
     .toBlocking()
     .single()
+
+  fun countProfiles(): Int = all().count()
 }

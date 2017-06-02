@@ -31,6 +31,8 @@ fun main(args: Array<String>) {
     use("/person")
       .get("/fetch/all") { -> personQuery().all() }
 
+      .get("/fetch/count") { -> personQuery().countProfiles() }
+
       .get("/:uuid") { req -> personQuery().one(req.uuid()) ?: Results.with(NOT_FOUND) }
 
       .post { req -> personCommand().apply(req.addPerson()) ?: Results.with(UNPROCESSABLE_ENTITY) }
