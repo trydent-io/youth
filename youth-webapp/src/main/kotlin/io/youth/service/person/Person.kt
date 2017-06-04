@@ -1,7 +1,7 @@
 package io.youth.service.person
 
 import com.github.davidmoten.rx.jdbc.QuerySelect
-import org.h2.util.MathUtils.*
+import org.h2.util.MathUtils.randomInt
 import org.jooby.Jooby
 import java.io.InputStream
 import java.util.UUID
@@ -58,14 +58,6 @@ data class Profile(
   val homePhone: String?
 )
 
-data class ProfilePerson(
-  val uuid: String,
-  val fullName: String,
-  val picture: String?,
-  val email: String?,
-  val mobilePhone: String?
-)
-
 internal fun QuerySelect.Builder.asPerson() = this.get {
   Person(
     uuid = it.getString("uuid"),
@@ -93,3 +85,4 @@ fun Jooby.personQuery() = this.require(PersonQuery::class.java)!!
 internal val personFields = "uuid, firstName, secondName, lastName, fiscalCode, gender"
 internal val personParams = "?, ?, ?, ?, ?, ?"
 internal val profilePersonFields = "uuid, fullName, fiscalCode, gender, picture, email, mobilephone"
+

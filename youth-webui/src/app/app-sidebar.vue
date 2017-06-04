@@ -1,37 +1,24 @@
 <!--suppress UnterminatedStatementJS -->
 <template>
-  <div id="sidebar" class="ui left vertical inverted sidebar" style="background: #34495e">
-    <div class="ui card" style="border-radius: 0; box-shadow: 0">
-      <div class="image">
-        <img src="/static/female/female_avatar14.svg">
-      </div>
-      <div class="content">
-        <a class="header">Kristy</a>
-        <div class="meta">
-          <span class="date">Joined in 2013</span>
-        </div>
-        <div class="description">
-          Kristy is an art director living in New York.
-        </div>
-      </div>
-      <div class="extra content">
-        <a>
-          <i class="user icon"></i>
-          22 Friends
-        </a>
-      </div>
+  <div id="sidebar" class="ui left vertical sidebar menu" style="background: #F5F7FA; border: 0">
+    <div class="ui mini image item" style="width: 100%; background: #8E44AD">
+      <img src="/static/female/female_avatar14.svg" style="width: 56px; display: inline-block">
+      <h4 style="display: inline-block; margin: 0 0 0 8px; color: #ffffff">Kristy</h4>
+    </div>
+    <div class="description item">
+      Kristy is an art director living in New York.
     </div>
     <a class="item">
       <i class="home icon"></i>
       Home
     </a>
     <a class="item">
-      <i class="block layout icon"></i>
-      Topics
+      <i class="users icon"></i>
+      People
     </a>
     <a class="item">
-      <i class="smile icon"></i>
-      Friends
+      <i class="calendar icon"></i>
+      Events
     </a>
   </div>
 </template>
@@ -47,11 +34,14 @@
       this.$bus.$on(commands.OPEN_SIDEBAR, () => this.open())
     },
     computed: {
-      sidebar () { return $('#sidebar') }
+      sidebar () {
+        return $('#sidebar')
+      }
     },
     methods: {
-      open () { this.sidebar.sidebar('toggle') }
+      open () {
+        this.sidebar.sidebar('toggle')
+      }
     }
   }
 </script>
-

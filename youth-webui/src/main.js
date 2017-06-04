@@ -8,7 +8,7 @@ import 'semantic-ui-css/semantic.min'
 // import 'semantic-ui-css/components/reset.min.css'
 // import 'semantic-ui-css/semantic.min.css'
 // import VueMaterial from 'vue-material'
-
+import './directives/uth-tooltip'
 import App from './app/app.vue'
 
 // Vue.use(VueAxios, axios)

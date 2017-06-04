@@ -1,12 +1,12 @@
-<!--suppress UnterminatedStatementJS -->
-<template>
+<!--suppress UnterminatedStatementJS, HtmlUnknownAttribute -->
+<template xmlns:v-uth-tooltip="http://www.w3.org/1999/xhtml">
   <div class="ui violet inverted massive borderless menu" style="border-radius: 0">
     <a href="#" class="ui item" @click="openSidebar()">
       <i class="content icon"></i>
     </a>
     <div class="header active item">
-      <img class="logo" src="static/youth.svg">
-      U<strong>th</strong>
+      <img class="logo" src="static/logo_youth2.png">
+      <strong>U<sup>th</sup></strong>
     </div>
     <div class="ui one column grid" style="flex: 1;">
       <div class="column">
@@ -45,9 +45,22 @@
           <div class="item">Event</div>
         </div>
       </div>-->
-      <a class="item">
-        <i class="icon ellipsis vertical"></i>
+      <a ref="asd" class="item" @click="openAbout()">
+        <i class="icon ellipsis vertical" v-uth-tooltip:bottom.right="Test"></i>
       </a>
+      <!--<div ref="about" class="ui popup bottom left transition hidden">
+        <div class="ui four column relaxed equal height divided grid">
+          <div class="column">
+            <h4 class="ui header">Fabrics</h4>
+            <div class="ui link list">
+              <a class="item">Cashmere</a>
+              <a class="item">Linen</a>
+              <a class="item">Cotton</a>
+              <a class="item">Viscose</a>
+            </div>
+          </div>
+        </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -58,9 +71,6 @@
   import * as prCommands from './person/person-command'
 
   export default {
-    data: () => ({
-      selectedAdd: null
-    }),
     mounted () {
       const self = this
       $('#dropdown').dropdown()
@@ -73,10 +83,39 @@
           self.add()
         }
       })
+
+      /*
+       $(this.$refs.about).popup({
+       context: 'div#asd',
+       position: 'bottom right'
+       })
+       */
+//      $(this.$refs.asd).popup()
+      this.about.popup({
+//        inline: true,
+        popup: '.popup',
+        position: 'bottom right',
+        delay: {
+          show: 300,
+          hide: 800
+        }
+      })
+    },
+    data: () => ({
+      selectedAdd: null
+    }),
+    computed: {
+      about () {
+        return $(this.$refs.about)
+      }
     },
     methods: {
       openSidebar () {
         this.$bus.$emit(commands.OPEN_SIDEBAR)
+      },
+      openAbout () {
+        console.log('Hi there')
+        this.about.popup('show')
       },
       add () {
         const item = this.selectedAdd

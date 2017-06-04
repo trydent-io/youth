@@ -1,7 +1,6 @@
 package io.youth.service.person
 
 import com.github.davidmoten.rx.jdbc.Database
-import com.google.inject.Inject
 import io.youth.bus.Command
 import io.youth.service.newUuid
 import java.util.function.Function
@@ -29,7 +28,7 @@ internal val adding = "insert into person($personFields) values($personParams)"
 internal val editing = "update person set firstName = ?, secondName = ?, lastName = ?, fiscalCode = ?, gender = ? where uuid = ?"
 internal val removing = "delete from person where uuid = ?"
 
-class PersonCommand @Inject constructor(private val db: Database) : Function<Command, Person?> {
+class PersonCommand(private val db: Database) : Function<Command, Person?> {
   private val add: (a: AddPerson) -> Person? = {
     it.let { (firstName, secondName, lastName, fiscalCode, gender) ->
       Thread.sleep(1000)
@@ -97,3 +96,4 @@ class PersonCommand @Inject constructor(private val db: Database) : Function<Com
     else -> throw RuntimeException()
   }
 }
+

@@ -1,32 +1,24 @@
 package io.youth.service.person
 
 import com.github.davidmoten.rx.jdbc.Database
-import com.google.inject.Inject
+import io.youth.service.Injection
 
-internal val profilePersonAll = "select * from profile_person"
 internal val personAll = "select $personFields from person"
 internal val personOne = "$personAll where uuid = ?"
 
-class PersonQuery @Inject constructor(private val db: Database) {
-  fun all(): Iterable<ProfilePerson> = db
-    .select(profilePersonAll)
-    .asProfilePerson()
-    .asObservable()
-    .map {
-      Thread.sleep(100)
-      it
-    }
-    .toList()
-    .toBlocking()
-    .toIterable()
-    .first()
 
+
+class PersonQuery(private val db: Database) {
   fun one(uuid: String): Person? = db
     .select(personOne)
     .parameter(uuid)
     .asPerson()
     .toBlocking()
     .single()
+}
 
-  fun countProfiles(): Int = all().count()
+val personQuery: Injection = {
+  it
+    .bind(PersonQuery::class.java)
+    .toConstructor(PersonQuery::class.java.getConstructor(Database::class.java))
 }

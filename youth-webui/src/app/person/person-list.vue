@@ -114,7 +114,7 @@
     },
     methods: {
       add () {
-        this.$refs.personDialog.open(new Person())
+        this.$refs.dialog.open(new Person())
       },
       edit (person) {
         this.$bus.$emit(commands.EDIT_PERSON, person)

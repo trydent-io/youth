@@ -1,6 +1,6 @@
 <!--suppress UnterminatedStatementJS -->
 <template>
-  <div id="personDialog" class="ui modal">
+  <div ref="dialog" class="ui modal">
     <i class="close icon"></i>
     <div class="header">
       Person
@@ -58,10 +58,10 @@
     </div>
     <div class="actions">
       <label v-if="message != null">{{message}}</label>
-      <div class="ui basic primary deny button">
+      <div class="ui basic primary cancel button">
         Cancel
       </div>
-      <button class="ui labeled green icon button" :class="{ loading: saving }" @click="save()">
+      <button ref="saveButton" class="ui labeled green icon button" :class="{ loading: saving }" @click="save()">
         <i class="check icon"></i>
         Save
       </button>
@@ -89,7 +89,7 @@
       message: null
     }),
     computed: {
-      personDialog () { return $('#personDialog') },
+      dialog () { return $(this.$refs.dialog) },
       firstName () { return this.$refs.firstName }
     },
     methods: {
@@ -98,7 +98,7 @@
       isBeyond () { this.person.gender = 'beyond' },
       open (person) {
         this.person = person
-        this.personDialog.modal('show')
+        this.dialog.modal('show')
         this.firstName.focus()
       },
       save () {
@@ -109,11 +109,13 @@
           this.$bus.$emit(events.PERSON_ADDED)
           this.message = `${this.person.firstName} ${this.person.lastName} has been saved.`
           this.saving = false
+          this.dialog.modal('hide')
         }
 
         const exceptionally = err => {
           this.message = 'Something wrong has happened'
           this.saving = false
+          this.saved = false
           console.log(err)
         }
 

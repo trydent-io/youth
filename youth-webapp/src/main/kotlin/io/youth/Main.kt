@@ -2,9 +2,11 @@ package io.youth
 
 import io.youth.service.person.AddPerson
 import io.youth.service.person.EditPerson
+import io.youth.service.person.PersonModule
 import io.youth.service.person.RemovePerson
 import io.youth.service.person.personCommand
 import io.youth.service.person.personQuery
+import io.youth.service.person.profilePersons
 import org.jooby.Request
 import org.jooby.Results
 import org.jooby.Status.NOT_FOUND
@@ -27,11 +29,12 @@ fun main(args: Array<String>) {
     use(Flywaydb())
     use(Rx())
     use(RxJdbc())
+    use(PersonModule())
 
     use("/person")
-      .get("/fetch/all") { -> personQuery().all() }
+      .get("/fetch/all") { -> profilePersons().toList() }
 
-      .get("/fetch/count") { -> personQuery().countProfiles() }
+      .get("/fetch/count") { -> profilePersons().count() }
 
       .get("/:uuid") { req -> personQuery().one(req.uuid()) ?: Results.with(NOT_FOUND) }
 

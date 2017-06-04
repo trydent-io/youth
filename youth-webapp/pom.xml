@@ -30,6 +30,26 @@
 
     <dependency>
       <groupId>org.jooby</groupId>
+      <artifactId>jooby-pac4j</artifactId>
+      <version>${jooby.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.pac4j</groupId>
+          <artifactId>pac4j-http</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.pac4j</groupId>
+          <artifactId>pac4j-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pac4j</groupId>
+      <artifactId>pac4j-http</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jooby</groupId>
       <artifactId>jooby-rxjava</artifactId>
       <version>${jooby.version}</version>
     </dependency>
