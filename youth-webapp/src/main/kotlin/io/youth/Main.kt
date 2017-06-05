@@ -7,6 +7,7 @@ import io.youth.service.person.RemovePerson
 import io.youth.service.person.personCommand
 import io.youth.service.person.personQuery
 import io.youth.service.person.profilePersons
+import org.jooby.MediaType.json
 import org.jooby.Request
 import org.jooby.Results
 import org.jooby.Status.NOT_FOUND
@@ -31,7 +32,14 @@ fun main(args: Array<String>) {
     use(RxJdbc())
     use(PersonModule())
 
+    use("/")
+      .get { -> "You should look at the Person API on /person."}
+      .consumes(json)
+      .produces(json)
+
     use("/person")
+      .get { -> "Person API by using HATEOAS is on the way" }
+
       .get("/fetch/all") { -> profilePersons().toList() }
 
       .get("/fetch/count") { -> profilePersons().count() }
@@ -43,6 +51,9 @@ fun main(args: Array<String>) {
       .put { req -> personCommand().apply(req.editPerson()) ?: Results.with(UNPROCESSABLE_ENTITY) }
 
       .delete("/:uuid") { req -> personCommand().apply(RemovePerson(req.uuid())) ?: Results.with(UNPROCESSABLE_ENTITY) }
+
+      .consumes(json)
+      .produces(json)
   }
 }
 

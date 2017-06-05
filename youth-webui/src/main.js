@@ -2,17 +2,11 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import store from './store'
-// import router from './router'
+import router from './router'
 import 'semantic-ui-css/semantic.min.css'
 import 'semantic-ui-css/semantic.min'
-// import 'semantic-ui-css/components/reset.min.css'
-// import 'semantic-ui-css/semantic.min.css'
-// import VueMaterial from 'vue-material'
-import './directives/uth-tooltip'
-import App from './app/app.vue'
-
-// Vue.use(VueAxios, axios)
-// Vue.use(VueMaterial)
+import './directives/uth-ui-element'
+import Main from './main.vue'
 
 Vue.config.productionTip = false
 
@@ -34,7 +28,7 @@ Vue.prototype.$await = (callback) => {
 
 new Vue({
   store,
-  // router,
+  router,
   el: '#app',
-  render: h => h(App)
+  render: h => h(Main)
 })

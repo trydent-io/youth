@@ -2,7 +2,7 @@
 <template xmlns:v-uth-tooltip="http://www.w3.org/1999/xhtml">
   <div class="ui violet inverted massive borderless menu" style="border-radius: 0">
     <a href="#" class="ui item" @click="openSidebar()">
-      <i class="content icon"></i>
+      <i class="content icon" v-uth-tooltip:center.right="'Menu'"></i>
     </a>
     <div class="header active item">
       <img class="logo" src="static/logo_youth2.png">
@@ -26,7 +26,7 @@
             <i class="plus icon"></i>
             Add
           </a>
-          <div id="combo" class="ui combo top right pointing dropdown icon button">
+          <div ref="adder" class="ui combo top right pointing dropdown icon button" v-uth-combobox="{ options: adderOptions, onChange: adderChanged }">
             <i class="dropdown icon"></i>
             <div class="menu">
               <div class="item"><i class="add user icon"></i> Person</div>
@@ -46,7 +46,7 @@
         </div>
       </div>-->
       <a ref="asd" class="item" @click="openAbout()">
-        <i class="icon ellipsis vertical" v-uth-tooltip:bottom.right="Test"></i>
+        <i class="icon ellipsis vertical"></i>
       </a>
       <!--<div ref="about" class="ui popup bottom left transition hidden">
         <div class="ui four column relaxed equal height divided grid">
@@ -71,59 +71,33 @@
   import * as prCommands from './person/person-command'
 
   export default {
-    mounted () {
-      const self = this
-      $('#dropdown').dropdown()
-//      $('#plusDropdown').dropdown({on: 'hover'})
-      $('#combo').dropdown({
-        on: 'hover',
-        action: 'combo',
-        onChange: (value, text, selected) => {
-          self.selectedAdd = value
-          self.add()
-        }
-      })
-
-      /*
-       $(this.$refs.about).popup({
-       context: 'div#asd',
-       position: 'bottom right'
-       })
-       */
-//      $(this.$refs.asd).popup()
-      this.about.popup({
-//        inline: true,
-        popup: '.popup',
-        position: 'bottom right',
-        delay: {
-          show: 300,
-          hide: 800
-        }
-      })
-    },
     data: () => ({
-      selectedAdd: null
+      selectedAdd: null,
+      adderOptions: { on: 'hover' }
     }),
     computed: {
       about () {
         return $(this.$refs.about)
-      }
+      },
+      adder () { return $(this.$refs.adder) }
     },
     methods: {
+      adderChanged (value) {
+        this.selectedAdd = value
+        this.add()
+      },
       openSidebar () {
         this.$bus.$emit(commands.OPEN_SIDEBAR)
       },
       openAbout () {
-        console.log('Hi there')
         this.about.popup('show')
       },
       add () {
         const item = this.selectedAdd
-        const combo = $('#combo')
         const match = [
           {
             when: v => v === null || v === undefined,
-            then: v => combo.dropdown('show')
+            then: v => this.adder.dropdown('show')
           },
           {
             when: v => v.indexOf('person') > 0,

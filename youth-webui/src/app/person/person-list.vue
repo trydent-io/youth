@@ -14,13 +14,11 @@
           class="plus icon"></i> Add</span></strong> button on the toolbar.</p>
       </div>
     </div>
-    <!--    <div class="ui right aligned segment">
-          <button class="ui primary labeled icon button" @click="add()">
-            <i class="plus icon"></i> Add Person
-          </button>
-        </div>-->
     <transition name="fade">
-      <table class="ui selectable striped padded large table" v-if="loaded && !empty">
+      <board-message :title="errorTitle" :message="errorMessage" type="error" v-if="error"></board-message>
+    </transition>
+    <transition name="fade">
+      <table class="ui selectable striped padded large table" v-if="loaded && !empty && !error">
         <thead>
           <tr>
             <th></th>
@@ -93,9 +91,10 @@
   import * as commands from './person-command'
   import {Person} from './person-model'
   import PersonDialog from './person-dialog.vue'
+  import BoardMessage from '../../shared/board-message.vue'
 
   export default {
-    components: {PersonDialog},
+    components: {PersonDialog, BoardMessage},
     created () {
       this.fetchAll()
 
@@ -105,7 +104,9 @@
       persons: [],
       loading: true,
       error: false,
-      empty: false
+      empty: false,
+      errorTitle: '',
+      errorMessage: ''
     }),
     computed: {
       loaded () {
@@ -126,7 +127,13 @@
           this.loading = false
           this.empty = data.length === 0
         }
-        const exceptionally = () => {
+        const exceptionally = err => {
+          this.errorTitle = err.message
+          if (err.message.indexOf('Error') > 0) {
+            this.errorMessage = 'API not reachable: Youth Server is maybe down for some reasons.'
+          } else {
+            this.errorMessage = 'Something else has happened.'
+          }
           this.loading = false
           this.error = true
           this.empty = false
@@ -136,16 +143,11 @@
       },
       member () {
         switch (Math.floor(Math.random() * 5)) {
-          case 0:
-            return 'member'
-          case 1:
-            return 'partner'
-          case 2:
-            return 'customer'
-          case 3:
-            return 'tester'
-          case 4:
-            return 'associate'
+          case 0: return 'member'
+          case 1: return 'partner'
+          case 2: return 'customer'
+          case 3: return 'tester'
+          case 4: return 'associate'
         }
       }
     }

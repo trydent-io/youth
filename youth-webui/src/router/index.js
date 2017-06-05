@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-// import Home from '../components/home/home.vue'
-// import Person from '../components/person/person-list.vue'
+import Auth from '../auth/auth.vue'
+import App from '../app/app.vue'
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    {path: '/', redirect: '/home'}
-    // {path: '/home', component: Home},
-    // {path: '/person', component: Person}
+    {path: '/', redirect: '/auth'},
+    {path: '/home', component: App},
+    {path: '/auth', component: Auth}
   ]
 })
 

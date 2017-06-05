@@ -7,9 +7,6 @@
 
     <div class="ui grid container">
       <div class="one column row">
-        <h1 class="ui header">Semantic UI</h1>
-      </div>
-      <div class="one center aligned column row">
         <person-list></person-list>
       </div>
     </div>
