@@ -23,6 +23,18 @@
             </div>
           </div>
           <div class="ui fluid large teal submit button">Login</div>
+          <h4 class="ui dividing header">Social Login</h4>
+          <div class="ui fluid large buttons">
+            <button class="ui google plus icon button">
+              <i class="google icon"></i>
+              Google
+            </button>
+            <div class="or"></div>
+            <button class="ui facebook icon button">
+              <i class="facebook icon"></i>
+              Facebook
+            </button>
+          </div>
         </div>
 
         <transition type="fade">
@@ -40,32 +52,9 @@
 
 <script>
   import $ from 'jquery'
-  import auth0 from 'auth0-js'
-
-  class AuthService {
-
-    constructor () {
-      this.login = this.login.bind(this)
-    }
-
-    auth0 = new auth0.WebAuth({
-      domain: 'tryio.eu.auth0.com',
-      clientID: 'raatmkNWh5cI2jGnx7uhsi2Re-bg9ipn',
-      redirectUri: 'http://localhost:8080/',
-      audience: 'https://tryio.eu.auth0.com/userinfo',
-      responseType: 'token id_token',
-      scope: 'openid'
-    })
-
-    login () {
-      this.auth0.authorize()
-    }
-  }
 
   export default {
     mounted () {
-      new AuthService().login()
-
       $('.ui.form')
         .form({
           fields: {

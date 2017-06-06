@@ -6,6 +6,7 @@
 		</encoder>
 	</appender>
 
+<!--
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>log/todo-backend.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -31,9 +32,10 @@
 			<pattern>%msg%n</pattern>
 		</encoder>
 	</appender>
+-->
 
 	<logger name="org.jooby.RequestLogger" additivity="false">
-		<appender-ref ref="ACCESS"/>
+		<appender-ref ref="STDOUT"/>
 	</logger>
 
 	<root level="INFO">

@@ -1,6 +1,5 @@
 package io.youth
 
-import com.typesafe.config.Config
 import io.youth.service.person.AddPerson
 import io.youth.service.person.EditPerson
 import io.youth.service.person.PersonModule
@@ -30,7 +29,6 @@ import org.pac4j.http.client.direct.ParameterClient
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration
 import org.pac4j.jwt.config.signature.SignatureConfiguration
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
-import org.pac4j.jwt.profile.JwtGenerator
 import org.pac4j.oauth.client.FacebookClient
 import org.pac4j.oidc.client.OidcClient
 import org.pac4j.oidc.config.OidcConfiguration
@@ -62,7 +60,7 @@ val handler = Route.OneArgHandler {
   )
 }
 
-class GoogleClient(conf: OidcConfiguration): OidcClient<OidcProfile>(conf)
+class GoogleClient(conf: OidcConfiguration) : OidcClient<OidcProfile>(conf)
 
 fun main(args: Array<String>) {
   run(*args) {
@@ -71,25 +69,31 @@ fun main(args: Array<String>) {
     use(Flywaydb())
     use(Rx())
     use(RxJdbc())
+
     use(PersonModule())
 
-    get("*") { req, _ -> req.session().get(Auth.ID).toOptional().ifPresent { req.set("logged", it) } }
+//    get("*") { req, _ -> req.session().get(Auth.ID).toOptional().ifPresent { req.set("logged", it) } }
 
-    get("/token") { req ->
+/*    get("/token") { req ->
       val profile = getUserProfile(req)
       val config = req.require(Config::class.java)
-      val jwtGenerator = JwtGenerator<CommonProfile>(config.getString("jwt.salt"))
+      val sign = SecretSignatureConfiguration(config.getString("jwt.salt"))
+      val jwtGenerator = JwtGenerator<CommonProfile>(sign)
       val token = jwtGenerator.generate(profile)
 
       Token(token)
-    }
+    }*/
+
+    assets("/", "index.html")
+    assets("/static/**")
 
     use(Auth()
-      .client("/facebook/**") {
-        FacebookClient(it.getString("fb.key"), it.getString("fb.secret"))
+      .client("/auth/facebook/**") {
+        FacebookClient(it.getString("fb.key"), it.getString("fb.secret")).apply {
+          scope = "public_profile"
+        }
       }
-
-      .client("/google/**") {
+      .client("/auth/google/**") {
         OidcConfiguration().apply {
           clientId = it.getString("oidc.clientID")
           secret = it.getString("oidc.secret")
@@ -99,7 +103,7 @@ fun main(args: Array<String>) {
           GoogleClient(it)
         }
       }
-      .client("/jwt/*") { conf ->
+      .client("/auth/jwt/**") { conf ->
         SecretSignatureConfiguration(conf.getString("jwt.salt"))
           .let { arrayOf<SignatureConfiguration>(it).toMutableList() }
           .let { JwtAuthenticator(it) }
@@ -112,23 +116,18 @@ fun main(args: Array<String>) {
       }
     )
 
-    get("/profile", handler)
+    get("/auth/profile", handler)
 
-    get("/google", handler)
+    get("/auth/google", handler)
 
-    get("/facebook", handler)
+    get("/auth/facebook", handler)
 
-    get("/jwt", handler)
+    get("/auth/jwt", handler)
 
-    get("/token", handler)
+    get("/auth/token", handler)
 
 
-    use("/")
-      .get { -> "You should look at the Person API on /person." }
-      .consumes(json)
-      .produces(json)
-
-    use("/person")
+    use("/api/person")
       .get { -> "Person API by using HATEOAS is on the way" }
 
       .get("/fetch/all") { -> profilePersons().toList() }

@@ -12,7 +12,7 @@
   <artifactId>youth-webapp</artifactId>
 
   <properties>
-    <pac4j-version>1.9.5</pac4j-version>
+    <pac4j-version>1.9.8</pac4j-version>
   </properties>
 
   <dependencies>
@@ -30,6 +30,11 @@
       <groupId>org.jooby</groupId>
       <artifactId>jooby-gson</artifactId>
       <version>${jooby.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jooby</groupId>
+      <artifactId>jooby-commons-email</artifactId>
+      <version>1.1.2</version>
     </dependency>
 
     <dependency>
