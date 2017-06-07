@@ -23,18 +23,6 @@
             </div>
           </div>
           <div class="ui fluid large teal submit button">Login</div>
-          <h4 class="ui dividing header">Social Login</h4>
-          <div class="ui fluid large buttons">
-            <button class="ui google plus icon button">
-              <i class="google icon"></i>
-              Google
-            </button>
-            <div class="or"></div>
-            <button class="ui facebook icon button">
-              <i class="facebook icon"></i>
-              Facebook
-            </button>
-          </div>
         </div>
 
         <transition type="fade">
@@ -42,6 +30,21 @@
         </transition>
 
       </form>
+
+      <auth-social :type="type"></auth-social>
+
+      <h4 class="ui dividing header">Social Login</h4>
+      <div class="ui fluid large buttons">
+        <a class="ui google plus icon button" href="http://localhost:8080/auth/google" target="_blank">
+          <i class="google icon"></i>
+          Google
+        </a>
+        <div class="or"></div>
+        <a class="ui facebook icon button" href="http://localhost:8080/auth/facebook" target="_blank">
+          <i class="facebook icon"></i>
+          Facebook
+        </a>
+      </div>
 
       <div class="ui message">
         New to us? <a href="#">Sign Up</a>
@@ -52,8 +55,12 @@
 
 <script>
   import $ from 'jquery'
+  import axios from 'axios'
+  import AuthSocial from './auth-social.vue'
+  import * as commands from './auth-social-command'
 
   export default {
+    components: {AuthSocial},
     mounted () {
       $('.ui.form')
         .form({
@@ -86,6 +93,37 @@
             }
           }
         })
+    },
+    data: () => ({
+      type: 'google'
+    }),
+    methods: {
+      socialLogin (social) {
+        this.type = social
+        this.$bus.$emit(commands.OPEN_SOCIAL_LOGIN)
+      },
+      openGoogle () {
+        this.socialLogin('google')
+      },
+      openFacebook () {
+        axios.interceptors.request.use(config => {
+          console.log(`Config: ${config.url}`)
+          return config
+        })
+
+        axios.get(`http://localhost:8080/auth/facebook`)
+          .then(res => {
+            console.log(`Res: ${res}`)
+            console.log(`Data: ${res.data}`)
+
+            return res
+          })
+          .catch(err => {
+            console.log(`Err: ${err}`)
+            console.log(`Data: ${err.statusCode}`)
+          })
+//        this.socialLogin('facebook')
+      }
     }
   }
 </script>

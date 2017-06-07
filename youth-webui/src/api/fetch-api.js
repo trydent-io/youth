@@ -1,6 +1,7 @@
 import axios from 'axios'
+import config from '../config'
 
-axios.defaults.baseURL = 'http://localhost:8080'
+axios.defaults.baseURL = config.baseUrl
 
 const FetchApi = (http) => {
   const resolve = (method, apply, exceptionally) => method.then(res => apply(res.data)).catch(exceptionally)
@@ -16,4 +17,4 @@ const FetchApi = (http) => {
   }
 }
 
-export default new FetchApi(axios, 'http://localhost:8080')
+export default new FetchApi(axios)

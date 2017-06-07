@@ -6,6 +6,7 @@
     <person-dialog></person-dialog>
 
     <div class="ui grid container">
+      <div class="one column row">{{ $route.params.username }}</div>
       <div class="one column row">
         <person-list></person-list>
       </div>

@@ -9,7 +9,8 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    {path: '/', redirect: '/auth'},
+    // {path: '/', redirect: '/auth'},
+    {path: '/:username', component: App},
     {path: '/home', component: App},
     {path: '/auth', component: Auth}
   ]

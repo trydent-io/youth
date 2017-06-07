@@ -1,5 +1,6 @@
 package io.youth
 
+import com.typesafe.config.Config
 import io.youth.service.person.AddPerson
 import io.youth.service.person.EditPerson
 import io.youth.service.person.PersonModule
@@ -29,6 +30,7 @@ import org.pac4j.http.client.direct.ParameterClient
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration
 import org.pac4j.jwt.config.signature.SignatureConfiguration
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
+import org.pac4j.jwt.profile.JwtGenerator
 import org.pac4j.oauth.client.FacebookClient
 import org.pac4j.oidc.client.OidcClient
 import org.pac4j.oidc.config.OidcConfiguration
@@ -54,10 +56,13 @@ data class Token(val token: String)
 val handler = Route.OneArgHandler {
   val profile = getUserProfile(it)
 
-  OpenIDProfile(
+  val openID = OpenIDProfile(
     client = profile::class.java.simpleName.replace("Profile", ""),
     profile = profile
   )
+
+//  Results.redirect("http://localhost:8090/${openID.profile.attributes["access_token"]}")
+  openID
 }
 
 class GoogleClient(conf: OidcConfiguration) : OidcClient<OidcProfile>(conf)
@@ -72,9 +77,9 @@ fun main(args: Array<String>) {
 
     use(PersonModule())
 
-//    get("*") { req, _ -> req.session().get(Auth.ID).toOptional().ifPresent { req.set("logged", it) } }
+    get("*") { req, _ -> req.session().get(Auth.ID).toOptional().ifPresent { req.set("logged", it) } }
 
-/*    get("/token") { req ->
+    get("/auth/token") { req ->
       val profile = getUserProfile(req)
       val config = req.require(Config::class.java)
       val sign = SecretSignatureConfiguration(config.getString("jwt.salt"))
@@ -82,7 +87,7 @@ fun main(args: Array<String>) {
       val token = jwtGenerator.generate(profile)
 
       Token(token)
-    }*/
+    }
 
     assets("/", "index.html")
     assets("/static/**")
@@ -125,7 +130,6 @@ fun main(args: Array<String>) {
     get("/auth/jwt", handler)
 
     get("/auth/token", handler)
-
 
     use("/api/person")
       .get { -> "Person API by using HATEOAS is on the way" }
