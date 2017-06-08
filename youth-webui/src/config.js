@@ -1,4 +1,4 @@
 export default {
-  prod: false,
+  prod: true,
   baseUrl: this.prod ? '' : 'http://localhost:8080'
 }

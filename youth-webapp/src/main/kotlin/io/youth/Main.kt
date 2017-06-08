@@ -47,22 +47,24 @@ val getUserProfile: (req: Request) -> CommonProfile = {
   if (isNull(id)) throw Err(Status.UNAUTHORIZED)
   val store = it.require(AuthStore::class)
 
-  store.get(id).get()
+  store.get(id).get().apply {
+    removeAttribute("sub")
+    removeAttribute("iat")
+  }
 }
 
 data class OpenIDProfile(val client: String, val profile: CommonProfile)
 data class Token(val token: String)
 
-val handler = Route.OneArgHandler {
-  val profile = getUserProfile(it)
+val handler = Route.OneArgHandler { req ->
+  val profile = getUserProfile(req)
 
-  val openID = OpenIDProfile(
+  OpenIDProfile(
     client = profile::class.java.simpleName.replace("Profile", ""),
     profile = profile
   )
 
-//  Results.redirect("http://localhost:8090/${openID.profile.attributes["access_token"]}")
-  openID
+  Results.redirect("/?logged")
 }
 
 class GoogleClient(conf: OidcConfiguration) : OidcClient<OidcProfile>(conf)

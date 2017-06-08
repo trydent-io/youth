@@ -31,7 +31,7 @@
         <tbody>
           <tr v-for="(person, index) in persons" :key="person.uuid">
             <td class="collapsing">
-              <div class="ui ribbon teal label">{{ member() }}</div>
+              <div class="ui ribbon teal label" style="left: -2.45em">{{ member() }}</div>
             </td>
             <td class="collapsing">
               <h4 class="ui image header">
@@ -155,10 +155,6 @@
 </script>
 
 <style>
-  .ui.table td > .ui.ribbon.label {
-    left: calc(-.78571429em - 1.6em);
-  }
-
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s
   }

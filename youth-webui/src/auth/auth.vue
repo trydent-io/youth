@@ -1,14 +1,8 @@
 <!--suppress HtmlUnknownTag -->
 <template>
-  <div class="ui middle aligned center aligned grid">
-    <div class="column">
-      <h2 class="ui teal image header">
-        <img src="static/logo_youth.png" class="image">
-        <div class="content" style="color: #34495e">
-          Log-in to your account
-        </div>
-      </h2>
-      <form class="ui large form">
+  <div class="ui middle aligned center aligned grid" style="height: 100%">
+    <div class="column" style="max-width: 450px">
+      <!--<form class="ui large form">
         <div class="ui stacked segment">
           <div class="field">
             <div class="ui left icon input">
@@ -29,26 +23,31 @@
           <div class="ui error message"></div>
         </transition>
 
-      </form>
+      </form>-->
 
-      <auth-social :type="type"></auth-social>
-
-      <h4 class="ui dividing header">Social Login</h4>
-      <div class="ui fluid large buttons">
-        <a class="ui google plus icon button" href="http://localhost:8080/auth/google" target="_blank">
+      <img src="static/space_porthole256.png" class="ui circular small centered image">
+      <h2 class="ui teal image header">
+        <span style="color: #f2f2f2">Welcome to Youth Demo App</span>
+      </h2>
+      <div class="ui pointing below label">
+        Please login with your Open ID
+      </div>
+      <div class="ui vertical fluid large buttons">
+        <a class="ui google plus icon labeled button" href="http://localhost:8080/auth/google" target="_self">
           <i class="google icon"></i>
           Google
         </a>
-        <div class="or"></div>
-        <a class="ui facebook icon button" href="http://localhost:8080/auth/facebook" target="_blank">
+        <a class="ui facebook icon labeled button" href="http://localhost:8080/auth/facebook" target="_self">
           <i class="facebook icon"></i>
           Facebook
         </a>
+        <a class="ui twitter icon labeled button" href="http://localhost:8080/auth/facebook" target="_self">
+          <i class="twitter icon"></i>
+          Twitter
+        </a>
       </div>
-
-      <div class="ui message">
-        New to us? <a href="#">Sign Up</a>
-      </div>
+      <br>
+      <div class="ui circular label" :class="{ orange: !logged, olive: logged }"><i class="thumbs icon" :class="{ down: !logged, up: logged }" ></i> {{accessed}}</div>
     </div>
   </div>
 </template>
@@ -56,11 +55,25 @@
 <script>
   import $ from 'jquery'
   import axios from 'axios'
-  import AuthSocial from './auth-social.vue'
-  import * as commands from './auth-social-command'
+  import jwtDecode from 'jwt-decode'
 
   export default {
-    components: {AuthSocial},
+    props: ['logged'],
+    created () {
+      if (this.logged) {
+        axios.get('/auth/token')
+          .then(res => {
+            const token = res.data['token']
+
+            if (token) {
+              const decoded = jwtDecode(token)
+              this.accessed = `${decoded.name} has logged!`
+
+              this.$router.push('home')
+            }
+          })
+      }
+    },
     mounted () {
       $('.ui.form')
         .form({
@@ -95,54 +108,14 @@
         })
     },
     data: () => ({
-      type: 'google'
-    }),
-    methods: {
-      socialLogin (social) {
-        this.type = social
-        this.$bus.$emit(commands.OPEN_SOCIAL_LOGIN)
-      },
-      openGoogle () {
-        this.socialLogin('google')
-      },
-      openFacebook () {
-        axios.interceptors.request.use(config => {
-          console.log(`Config: ${config.url}`)
-          return config
-        })
-
-        axios.get(`http://localhost:8080/auth/facebook`)
-          .then(res => {
-            console.log(`Res: ${res}`)
-            console.log(`Data: ${res.data}`)
-
-            return res
-          })
-          .catch(err => {
-            console.log(`Err: ${err}`)
-            console.log(`Data: ${err.statusCode}`)
-          })
-//        this.socialLogin('facebook')
-      }
-    }
+      accessed: 'Not logged'
+    })
   }
 </script>
 
 <style>
   body {
-    background: url(/static/back00.png) center top no-repeat !important;
-  }
-
-  body > .grid {
-    height: 100%;
-  }
-
-  .image {
-    margin-top: -100px;
-  }
-
-  .column {
-    max-width: 450px;
+    background-color: #34495e !important;
   }
 
   .fade-enter-active, .fade-leave-active {

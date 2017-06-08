@@ -16,6 +16,7 @@
     "gulp": "^3.9.1",
     "isotope-layout": "^3.0.4",
     "jquery": "^3.2.1",
+    "jwt-decode": "^2.2.0",
     "keycode": "^2.1.9",
     "lodash": "^4.17.4",
     "masonry-layout": "^4.2.0",

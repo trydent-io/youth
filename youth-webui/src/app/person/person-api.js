@@ -16,4 +16,4 @@ const PersonApi = (api, baseUrl) => {
   }
 }
 
-export default new PersonApi(fetchApi, 'person')
+export default new PersonApi(fetchApi, 'api/person')

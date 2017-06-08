@@ -6,7 +6,6 @@
     <person-dialog></person-dialog>
 
     <div class="ui grid container">
-      <div class="one column row">{{ $route.params.username }}</div>
       <div class="one column row">
         <person-list></person-list>
       </div>
@@ -26,7 +25,7 @@
 </script>
 
 <style>
-  body.pushable>.pusher {
+  body.pushable > .pusher {
     background: #f2f2f2;
   }
 

@@ -13,6 +13,7 @@
 
   <properties>
     <pac4j-version>1.9.8</pac4j-version>
+    <application.class>io.youth.MainKt</application.class>
   </properties>
 
   <dependencies>
@@ -118,4 +119,15 @@
       <version>1.4.195</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <finalName>youth</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.0.0</version>
+      </plugin>
+    </plugins>
+  </build>
 </project>
