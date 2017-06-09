@@ -55,7 +55,10 @@
 <script>
   import $ from 'jquery'
   import axios from 'axios'
+  import config from '../config'
   import jwtDecode from 'jwt-decode'
+
+  axios.defaults.baseURL = config.baseUrl
 
   export default {
     props: ['logged'],
