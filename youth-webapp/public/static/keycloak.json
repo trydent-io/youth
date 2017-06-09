@@ -1,0 +1,7 @@
+{
+  "realm": "youth",
+  "auth-server-url": "http://localhost:8180/auth",
+  "ssl-required": "external",
+  "resource": "youth-client",
+  "public-client": true
+}
