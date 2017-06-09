@@ -33,15 +33,15 @@
         Please login with your Open ID
       </div>
       <div class="ui vertical fluid large buttons">
-        <a class="ui google plus icon labeled button" href="http://localhost:8080/auth/google" target="_self">
+        <a class="ui google plus icon labeled button" href="/auth/google" target="_self">
           <i class="google icon"></i>
           Google
         </a>
-        <a class="ui facebook icon labeled button" href="http://localhost:8080/auth/facebook" target="_self">
+        <a class="ui facebook icon labeled button" href="/auth/facebook" target="_self">
           <i class="facebook icon"></i>
           Facebook
         </a>
-        <a class="ui twitter icon labeled button" href="http://localhost:8080/auth/facebook" target="_self">
+        <a class="ui twitter icon labeled button" href="/auth/facebook" target="_self">
           <i class="twitter icon"></i>
           Twitter
         </a>
