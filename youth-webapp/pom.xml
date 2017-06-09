@@ -134,6 +134,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <finalName>youth</finalName>
               <outputDirectory>../target</outputDirectory>
             </configuration>
           </execution>
